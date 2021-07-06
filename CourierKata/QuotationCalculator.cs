@@ -10,7 +10,13 @@ namespace CourierKata
     public class QuotationCalculator
     {
         Dictionary<ParcelSizeEnum, int> _maxSizes = new Dictionary<ParcelSizeEnum, int>() {
-            { ParcelSizeEnum.Small, 1  },{ ParcelSizeEnum.Medium, 3  },{ ParcelSizeEnum.Large, 6  },{ ParcelSizeEnum.XL, 10  }
+            { ParcelSizeEnum.Small, 1  }, { ParcelSizeEnum.Medium, 3  }, { ParcelSizeEnum.Large, 6  },
+            { ParcelSizeEnum.XL, 10  }, { ParcelSizeEnum.Heavy, 50}
+        };
+
+        Dictionary<ParcelSizeEnum, int> _excessiveWeightMultiplier = new Dictionary<ParcelSizeEnum, int>() {
+            { ParcelSizeEnum.Small, 2  }, { ParcelSizeEnum.Medium, 2  }, { ParcelSizeEnum.Large, 2  },
+            { ParcelSizeEnum.XL, 2 }, {ParcelSizeEnum.Heavy, 1 }
         };
 
         public IQuotation CalcualteQuotation(List<IParcel> parcels, ShipmentTypeEnum shipmentType = ShipmentTypeEnum.Standard) {
@@ -35,6 +41,12 @@ namespace CourierKata
         }
 
         public void CalculateSize(IParcel parcel) {
+
+            if (parcel.Weight > 10) {
+                parcel.Size = ParcelSizeEnum.Heavy;
+                return;
+            }
+
             var longestDimension = parcel.Length;
             if (parcel.Width > longestDimension)
                 longestDimension = parcel.Width;
@@ -66,10 +78,13 @@ namespace CourierKata
                 case Enums.ParcelSizeEnum.XL:
                     parcel.Cost = 25;
                     break;
+                case Enums.ParcelSizeEnum.Heavy:
+                    parcel.Cost = 50;
+                    break;
             }
 
             if (parcel.Weight > _maxSizes[parcel.Size])
-                parcel.Cost += (parcel.Weight - _maxSizes[parcel.Size]) * 2;
+                parcel.Cost += (parcel.Weight - _maxSizes[parcel.Size]) * _excessiveWeightMultiplier[parcel.Size];
         }
     }
 }

@@ -47,6 +47,17 @@ namespace CourierKataTests
 
             Assert.AreEqual(parcel.Cost, 25);
         }
+
+        [TestMethod]
+        public void verify_heavy_parcel_cost_calcuation() {
+            var parcel = new Parcel(1, 2, 1, 11) { Size = ParcelSizeEnum.Heavy };
+
+            var qutationCalculator = new QuotationCalculator();
+            qutationCalculator.CalculateParcelCost(parcel);
+
+            Assert.AreEqual(parcel.Cost, 50);
+        }
+
         [TestMethod]
         public void verify_small_parcel_cost_calcuation_for_extra_weight() {
             var parcel = new Parcel(2, 2, 9, 5) { Size = ParcelSizeEnum.Small };
@@ -86,5 +97,16 @@ namespace CourierKataTests
 
             Assert.AreEqual(parcel.Cost, 45);
         }
+
+        [TestMethod]
+        public void verify_heavy_parcel_cost_calcuation_for_extra_weight() {
+            var parcel = new Parcel(2, 2, 9, 55) { Size = ParcelSizeEnum.Heavy };
+
+            var qutationCalculator = new QuotationCalculator();
+            qutationCalculator.CalculateParcelCost(parcel);
+
+            Assert.AreEqual(parcel.Cost, 55);
+        }
+
     }
 }

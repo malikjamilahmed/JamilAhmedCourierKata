@@ -46,5 +46,15 @@ namespace CourierKataTests
 
             Assert.AreEqual(parcel.Size, CourierKata.Enums.ParcelSizeEnum.XL);
         }
+
+        [TestMethod]
+        public void verify_heavy_size_calcuation() {
+            var parcel = new Parcel(1, 1, 1, 11);
+
+            var qutationCalculator = new QuotationCalculator();
+            qutationCalculator.CalculateSize(parcel);
+
+            Assert.AreEqual(parcel.Size, CourierKata.Enums.ParcelSizeEnum.Heavy);
+        }
     }
 }

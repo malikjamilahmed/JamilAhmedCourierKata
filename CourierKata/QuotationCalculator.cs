@@ -10,7 +10,7 @@ namespace CourierKata
     public class QuotationCalculator
     {
 
-        public IQuotation CalcualteQuotation(List<IParcel> parcels) {
+        public IQuotation CalcualteQuotation(List<IParcel> parcels, ShipmentTypeEnum shipmentType = ShipmentTypeEnum.Standard) {
 
             parcels.ForEach(p => {
                 CalculateSize(p);
@@ -19,8 +19,14 @@ namespace CourierKata
 
             var quotation = new Quotation() {
                 LineItems = parcels,
+                shipmentType = shipmentType,
                 Total = parcels.Sum(p => p.Cost)
             };
+
+            if (shipmentType == ShipmentTypeEnum.Speedy) {
+                quotation.ShipmentCost = quotation.Total;
+                quotation.Total = quotation.Total * 2;
+            }
 
             return quotation;
         }

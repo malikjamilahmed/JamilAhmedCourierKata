@@ -31,7 +31,7 @@ namespace CourierKataTests
                     new Parcel(2, 2, 9), new Parcel(2, 49, 9)
                 }, ShipmentTypeEnum.Speedy);
 
-            Assert.AreEqual(result.shipmentType, ShipmentTypeEnum.Speedy);
+            Assert.AreEqual(result.ShipmentType, ShipmentTypeEnum.Speedy);
         }
 
         [TestMethod]
@@ -69,5 +69,6 @@ namespace CourierKataTests
 
             Assert.AreEqual(result.ShipmentCost, 0);
         }
+
     }
 }

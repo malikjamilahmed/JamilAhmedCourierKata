@@ -1,8 +1,5 @@
 ﻿using CourierKata.Contracts;
 using CourierKata.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CourierKata.Models
 {

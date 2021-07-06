@@ -9,7 +9,10 @@ namespace CourierKata.Contracts
 
         int Total { get; set; }
 
-        ShipmentTypeEnum shipmentType { get; set; }
+        ShipmentTypeEnum ShipmentType { get; set; }
+
         int ShipmentCost { get; set; }
+
+        int Discount { get; set; }
     }
 }

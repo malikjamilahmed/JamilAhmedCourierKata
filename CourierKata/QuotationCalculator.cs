@@ -19,6 +19,12 @@ namespace CourierKata
             { ParcelSizeEnum.XL, 2 }, {ParcelSizeEnum.Heavy, 1 }
         };
 
+        /// <summary>
+        /// To get the quote for parcels by passing parcel collection and shipment type
+        /// </summary>
+        /// <param name="parcels"></param>
+        /// <param name="shipmentType"></param>
+        /// <returns></returns>
         public IQuotation CalcualteQuotation(List<IParcel> parcels, ShipmentTypeEnum shipmentType = ShipmentTypeEnum.Standard) {
 
             parcels.ForEach(p => {
@@ -26,10 +32,13 @@ namespace CourierKata
                 CalculateParcelCost(p);
             });
 
+            int discount = CalculateDiscount(parcels);
+
             var quotation = new Quotation() {
                 LineItems = parcels,
-                shipmentType = shipmentType,
-                Total = parcels.Sum(p => p.Cost)
+                ShipmentType = shipmentType,
+                Discount = discount,
+                Total = parcels.Sum(p => p.Cost) - discount
             };
 
             if (shipmentType == ShipmentTypeEnum.Speedy) {
@@ -40,6 +49,11 @@ namespace CourierKata
             return quotation;
         }
 
+        /// <summary>
+        /// For evaluating parcel size. 
+        /// Note: This method must be called for each parcel before calling CalculateParcelCost
+        /// </summary>
+        /// <param name="parcel"></param>
         public void CalculateSize(IParcel parcel) {
 
             if (parcel.Weight > 10) {
@@ -63,6 +77,10 @@ namespace CourierKata
                 parcel.Size = ParcelSizeEnum.XL;
         }
 
+        /// <summary>
+        /// For evaluating parcel cost and setting back Cost property of parcel object
+        /// </summary>
+        /// <param name="parcel"></param>
         public void CalculateParcelCost(IParcel parcel) {
 
             switch (parcel.Size) {
@@ -85,6 +103,48 @@ namespace CourierKata
 
             if (parcel.Weight > _maxSizes[parcel.Size])
                 parcel.Cost += (parcel.Weight - _maxSizes[parcel.Size]) * _excessiveWeightMultiplier[parcel.Size];
+        }
+                
+        /// <summary>
+        /// I have divided this into 3 categories small, medium and mixed mania
+        /// Calculating max discout for small parcels, then medium and then remaining once.
+        /// </summary>
+        /// <param name="parcels"></param>
+        /// <returns></returns>
+        public int CalculateDiscount(List<IParcel> parcels) {
+            int discount = 0;
+            var clonedParcels = new List<IParcel>(parcels);
+
+            var smallParcels = clonedParcels.Where(p => p.Size == ParcelSizeEnum.Small).OrderBy(p => p.Cost).ToList();
+            discount += CalculateCombinationDiscount(clonedParcels, smallParcels, 4);
+
+            var mediumParcels = clonedParcels.Where(p => p.Size == ParcelSizeEnum.Medium).OrderBy(p => p.Cost).ToList();
+            discount += CalculateCombinationDiscount(clonedParcels, mediumParcels, 3);
+
+            discount += CalculateCombinationDiscount(clonedParcels, clonedParcels, 5);
+
+            return discount;
+        }
+
+        /// <summary>
+        /// Helper Discout method for calculating max dicount in each combination
+        /// </summary>
+        /// <param name="allParcels"></param>
+        /// <param name="combinationParcels"></param>
+        /// <param name="combinationSize"></param>
+        /// <returns></returns>
+        private static int CalculateCombinationDiscount(List<IParcel> allParcels, List<IParcel> combinationParcels, int combinationSize) {
+
+            int discount = 0;
+
+            while (combinationParcels.Count >= combinationSize) {
+                var discountableGroup = combinationParcels.TakeLast(combinationSize);
+                discount += discountableGroup.First().Cost;
+                allParcels.RemoveAll(p => discountableGroup.Contains(p));
+                combinationParcels.RemoveAll(p => discountableGroup.Contains(p));
+            }
+
+            return discount;
         }
     }
 }

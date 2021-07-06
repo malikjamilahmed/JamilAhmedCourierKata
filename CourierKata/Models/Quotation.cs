@@ -10,7 +10,10 @@ namespace CourierKata.Models
 
         public int Total { get; set; }
 
-        public ShipmentTypeEnum shipmentType { get; set; }
+        public ShipmentTypeEnum ShipmentType { get; set; }
+
         public int ShipmentCost { get; set; }
+
+        public int Discount { get; set; }
     }
 }

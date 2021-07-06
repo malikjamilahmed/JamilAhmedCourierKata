@@ -10,6 +10,8 @@ namespace CourierKata.Contracts
 
         int Height { get; set; }
 
+        int Weight { get; set; }
+
         int Cost { get; set; }
 
         ParcelSizeEnum Size { get; set; }

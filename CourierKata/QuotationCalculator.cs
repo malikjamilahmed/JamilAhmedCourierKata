@@ -9,6 +9,9 @@ namespace CourierKata
 {
     public class QuotationCalculator
     {
+        Dictionary<ParcelSizeEnum, int> _maxSizes = new Dictionary<ParcelSizeEnum, int>() {
+            { ParcelSizeEnum.Small, 1  },{ ParcelSizeEnum.Medium, 3  },{ ParcelSizeEnum.Large, 6  },{ ParcelSizeEnum.XL, 10  }
+        };
 
         public IQuotation CalcualteQuotation(List<IParcel> parcels, ShipmentTypeEnum shipmentType = ShipmentTypeEnum.Standard) {
 
@@ -64,6 +67,9 @@ namespace CourierKata
                     parcel.Cost = 25;
                     break;
             }
+
+            if (parcel.Weight > _maxSizes[parcel.Size])
+                parcel.Cost += (parcel.Weight - _maxSizes[parcel.Size]) * 2;
         }
     }
 }

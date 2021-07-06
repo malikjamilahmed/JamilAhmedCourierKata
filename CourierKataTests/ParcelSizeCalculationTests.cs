@@ -9,7 +9,7 @@ namespace CourierKataTests
     {
         [TestMethod]
         public void verify_small_size_calcuation() {
-            var parcel = new Parcel(2,2,9);
+            var parcel = new Parcel(2, 2, 9);
 
             var qutationCalculator = new QuotationCalculator();
             qutationCalculator.CalculateSize(parcel);
